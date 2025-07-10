@@ -4,6 +4,7 @@
 # JavaScript / Next.js
 #################################
 /node_modules
+/frontend/node_modules
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,6 +12,8 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
+
+* text=auto
 
 # testing
 /coverage

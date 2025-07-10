@@ -1,0 +1,3 @@
+{
+  "/(auth)/(forgot-password)/forgot-password-link/verify/[uid]/[token]/page": "app/(auth)/(forgot-password)/forgot-password-link/verify/[uid]/[token]/page.js"
+}
