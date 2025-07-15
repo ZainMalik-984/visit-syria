@@ -504,7 +504,7 @@ const Footer = ()=>{
         ]
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("footer", {
-        className: "bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 border-t border-zinc-200/50 dark:border-zinc-800/50",
+        className: "bg-gradient-to-br z-50 from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-zinc-950 border-t border-zinc-200/50 dark:border-zinc-800/50",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16",

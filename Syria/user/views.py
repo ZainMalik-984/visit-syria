@@ -74,7 +74,6 @@ class RegisterUserView(APIView):
         print("Request data:", request.data)  # Debugging line to check request data
         serializer_obj = registrationUserSerializer(data=request.data)
         if serializer_obj.is_valid():
-            print('sn')
             if os.getenv("EMAIL_SEND") == "True":
                 serializer_obj.save()
                 bol = send_activation_email(serializer_obj.validated_data["email"])
@@ -110,8 +109,10 @@ class AdminUserViewSet(viewsets.ModelViewSet):
 
 class registationAdminView(APIView):
     def post(self, req):
+        print(req.data)
         serializer_obj = RegistrationAdminSerializer(data=req.data)
         if serializer_obj.is_valid():
+            serializer_obj.save()
             if os.getenv("EMAIL_SEND") == "True":
                 bol = send_activation_email(serializer_obj.validated_data["email"])
                 if bol:

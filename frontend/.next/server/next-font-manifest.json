@@ -1,12 +1,6 @@
 {
   "app": {
-    "[project]/app/[locale]/(auth)/(forgot-password)/forgot-password-link/page": [
-      "static/media/gyByhwUxId8gMEwcGFWNOITd-s.p.da1ebef7.woff2"
-    ],
-    "[project]/app/[locale]/(auth)/login/page": [
-      "static/media/gyByhwUxId8gMEwcGFWNOITd-s.p.da1ebef7.woff2"
-    ],
-    "[project]/app/[locale]/(auth)/signup/page": [
+    "[project]/app/[locale]/admin/dashboard/page": [
       "static/media/gyByhwUxId8gMEwcGFWNOITd-s.p.da1ebef7.woff2"
     ],
     "[project]/app/[locale]/dashboard/page": [

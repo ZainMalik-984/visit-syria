@@ -1,7 +1,5 @@
 {
-  "/[locale]/(auth)/(forgot-password)/forgot-password-link/page": "app/[locale]/(auth)/(forgot-password)/forgot-password-link/page.js",
-  "/[locale]/(auth)/login/page": "app/[locale]/(auth)/login/page.js",
-  "/[locale]/(auth)/signup/page": "app/[locale]/(auth)/signup/page.js",
+  "/[locale]/admin/dashboard/page": "app/[locale]/admin/dashboard/page.js",
   "/[locale]/dashboard/page": "app/[locale]/dashboard/page.js",
   "/[locale]/page": "app/[locale]/page.js",
   "/_not-found/page": "app/_not-found/page.js"
