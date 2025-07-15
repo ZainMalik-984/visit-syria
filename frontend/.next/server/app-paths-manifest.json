@@ -1,12 +1,8 @@
 {
-  "/(auth)/(forgot-password)/forgot-password-link/page": "app/(auth)/(forgot-password)/forgot-password-link/page.js",
-  "/(auth)/(forgot-password)/forgot-password-link/verify/[uid]/[token]/page": "app/(auth)/(forgot-password)/forgot-password-link/verify/[uid]/[token]/page.js",
-  "/(auth)/(forgot-password)/forgot-password-otp/[email]/page": "app/(auth)/(forgot-password)/forgot-password-otp/[email]/page.js",
-  "/(auth)/(forgot-password)/forgot-password-otp/page": "app/(auth)/(forgot-password)/forgot-password-otp/page.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/dashbord/page": "app/dashbord/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js"
+  "/[locale]/(auth)/(forgot-password)/forgot-password-link/page": "app/[locale]/(auth)/(forgot-password)/forgot-password-link/page.js",
+  "/[locale]/(auth)/login/page": "app/[locale]/(auth)/login/page.js",
+  "/[locale]/(auth)/signup/page": "app/[locale]/(auth)/signup/page.js",
+  "/[locale]/dashboard/page": "app/[locale]/dashboard/page.js",
+  "/[locale]/page": "app/[locale]/page.js",
+  "/_not-found/page": "app/_not-found/page.js"
 }

@@ -18,7 +18,7 @@ const api = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axio
 // Setup interceptor
 api.interceptors.response.use((response)=>response, async (error)=>{
     const originalRequest = error.config;
-    if ((error.response?.status === 401 || error.response?.status === 403) && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
             await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('http://127.0.0.1:8000/api/user/token/refresh/', {}, {
@@ -54,14 +54,27 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$reduxjs$2f$toolkit$2f$dist$2f$redux$2d$toolkit$2e$modern$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs [app-client] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$axios$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/_lib/axios/axios.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/axios/lib/axios.js [app-client] (ecmascript)");
+;
 ;
 ;
 __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$axios$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].defaults.withCredentials = true // always send cookies
 ;
 const bootstrapAuth = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$reduxjs$2f$toolkit$2f$dist$2f$redux$2d$toolkit$2e$modern$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createAsyncThunk"])('auth/bootstrap', async (_, { rejectWithValue })=>{
     try {
-        const { data } = await __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$axios$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/user/token/verify/');
-        return data.user;
+        let res = await __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$axios$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/user/token/verify/');
+        console.log('Token verification response:', res);
+        if (res.data.valid === false) {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$axios$2f$lib$2f$axios$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('http://127.0.0.1:8000/api/user/token/refresh/', {}, {
+                withCredentials: true
+            });
+        }
+        res = await __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$axios$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/user/token/verify/');
+        if (res.data.valid === false) return rejectWithValue(null);
+        return {
+            ...res.data,
+            isAuthenticated: true
+        };
     } catch  {
         return rejectWithValue(null);
     }
@@ -70,13 +83,13 @@ const initialState = {
     isAuthenticated: false,
     email: null,
     role: null,
-    bootstrapped: false
+    isInitialized: false
 };
 const authSlice = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$reduxjs$2f$toolkit$2f$dist$2f$redux$2d$toolkit$2e$modern$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["createSlice"])({
     name: 'auth',
     initialState,
     reducers: {
-        /* called after /login */ loginSuccess: (state, action)=>{
+        loginSuccess: (state, action)=>{
             state.isAuthenticated = true;
             state.email = action.payload.email;
             state.role = action.payload.role;
@@ -88,14 +101,15 @@ const authSlice = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modul
     },
     extraReducers: (builder)=>{
         builder.addCase(bootstrapAuth.fulfilled, (state, action)=>{
-            state.isAuthenticated = true;
-            state.email = action.payload.email;
-            state.role = action.payload.role;
-            state.bootstrapped = true;
+            console.log('Auth bootstrap successful:', action.payload);
+            state.isAuthenticated = action.payload.isAuthenticated;
+            state.email = action.payload.data.email;
+            state.role = action.payload.data.role;
+            state.isInitialized = true;
         }).addCase(bootstrapAuth.rejected, (state)=>{
             state.isAuthenticated = false;
             state.email = state.role = null;
-            state.bootstrapped = true;
+            state.isInitialized = true;
         });
     }
 });
@@ -120,7 +134,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$slic
 const store = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$reduxjs$2f$toolkit$2f$dist$2f$redux$2d$toolkit$2e$modern$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__["configureStore"])({
     reducer: {
         auth: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$slices$2f$authSlice$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"]
-    }
+    },
+    middleware: (getDefaultMiddleware)=>getDefaultMiddleware()
 });
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
@@ -223,12 +238,12 @@ const Header = ()=>{
         try {
             await __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$axios$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/user/logout/');
             dispatch((0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$slices$2f$authSlice$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["logout"])());
-            router.push('/');
+            router.push('/login');
         } catch (err) {
             console.error('Logout failed: ', err);
         }
     };
-    const handleAuthToggle = ()=>isAuthenticated ? handleLogout() : router.push('/');
+    const handleAuthToggle = ()=>isAuthenticated ? handleLogout() : router.push('/login');
     /* ----------------  ui  ---------------- */ return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
         className: "sticky top-0 inset-x-0 z-50 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border-b border-zinc-200/50 dark:border-zinc-800/50 transition-all duration-300",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -945,11 +960,15 @@ __turbopack_context__.s({
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$redux$2f$dist$2f$react$2d$redux$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-redux/dist/react-redux.mjs [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/_lib/store/store.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/_lib/store/store.ts [app-client] (ecmascript)"); // Adjust path and import types
 var __TURBOPACK__imported__module__$5b$next$5d2f$internal$2f$font$2f$google$2f$geist_e531dabc$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[next]/internal/font/google/geist_e531dabc.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$next$5d2f$internal$2f$font$2f$google$2f$geist_mono_68a01160$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[next]/internal/font/google/geist_mono_68a01160.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/Header.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/components/Footer.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$slices$2f$authSlice$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/_lib/store/slices/authSlice.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 'use client';
 ;
 ;
@@ -959,6 +978,27 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Footer$
 ;
 ;
 ;
+;
+function AuthWrapper({ children }) {
+    _s();
+    const dispatch = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$redux$2f$dist$2f$react$2d$redux$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDispatch"])(); // Use typed dispatch
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "AuthWrapper.useEffect": ()=>{
+            dispatch((0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$slices$2f$authSlice$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["bootstrapAuth"])());
+        }
+    }["AuthWrapper.useEffect"], [
+        dispatch
+    ]);
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+        children: children
+    }, void 0, false);
+}
+_s(AuthWrapper, "rAh3tY+Iv6hWC9AI4Dm+rCbkwNE=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$redux$2f$dist$2f$react$2d$redux$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useDispatch"]
+    ];
+});
+_c = AuthWrapper;
 function RootLayout({ children }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("html", {
         lang: "en",
@@ -966,38 +1006,45 @@ function RootLayout({ children }) {
             store: __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$_lib$2f$store$2f$store$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["store"],
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("body", {
                 className: `${__TURBOPACK__imported__module__$5b$next$5d2f$internal$2f$font$2f$google$2f$geist_e531dabc$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].variable} ${__TURBOPACK__imported__module__$5b$next$5d2f$internal$2f$font$2f$google$2f$geist_mono_68a01160$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].variable} antialiased`,
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
-                        fileName: "[project]/app/layout.tsx",
-                        lineNumber: 31,
-                        columnNumber: 11
-                    }, this),
-                    children,
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
-                        fileName: "[project]/app/layout.tsx",
-                        lineNumber: 33,
-                        columnNumber: 11
-                    }, this)
-                ]
-            }, void 0, true, {
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(AuthWrapper, {
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Header$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                            fileName: "[project]/app/layout.tsx",
+                            lineNumber: 44,
+                            columnNumber: 13
+                        }, this),
+                        children,
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$components$2f$Footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                            fileName: "[project]/app/layout.tsx",
+                            lineNumber: 46,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/app/layout.tsx",
+                    lineNumber: 43,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
                 fileName: "[project]/app/layout.tsx",
-                lineNumber: 28,
+                lineNumber: 40,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/layout.tsx",
-            lineNumber: 27,
+            lineNumber: 39,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/layout.tsx",
-        lineNumber: 26,
+        lineNumber: 38,
         columnNumber: 5
     }, this);
 }
-_c = RootLayout;
-var _c;
-__turbopack_context__.k.register(_c, "RootLayout");
+_c1 = RootLayout;
+var _c, _c1;
+__turbopack_context__.k.register(_c, "AuthWrapper");
+__turbopack_context__.k.register(_c1, "RootLayout");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }

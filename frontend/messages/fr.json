@@ -1,0 +1,121 @@
+{
+  "header": {
+    "brand": { "name": "Titre", "tagline": "Sous-titre" },
+    "notifications": "Notifications",
+    "login": "Se connecter",
+    "logout": "Se déconnecter"
+  },
+  "footer": {
+    "brand": {
+      "subtitle": "Réservation Multi-Services",
+      "description": "Révolutionner la réservation de services avec des solutions intelligentes. Découvrez une gestion de réservation fluide, efficace et intelligente."
+    },
+    "contact": {
+      "email": "contact@syria.com",
+      "phone": "+1 (555) 123-4567",
+      "address": "San Francisco, CA"
+    },
+    "services": {
+      "title": "Services",
+      "webDevelopment": "Développement Web",
+      "mobileApps": "Applications Mobiles",
+      "uiUxDesign": "Conception UI/UX",
+      "consulting": "Consultation"
+    },
+    "company": {
+      "title": "Entreprise",
+      "aboutUs": "À Propos de Nous",
+      "ourTeam": "Notre Équipe",
+      "careers": "Carrières",
+      "contact": "Contact"
+    },
+    "support": {
+      "title": "Support",
+      "helpCenter": "Centre d'Aide",
+      "documentation": "Documentation",
+      "privacyPolicy": "Politique de Confidentialité",
+      "termsOfService": "Conditions d'Utilisation"
+    },
+    "newsletter": {
+      "title": "Restez Informé",
+      "description": "Recevez les dernières mises à jour sur les nouvelles fonctionnalités et services.",
+      "placeholder": "Entrez votre email",
+      "button": "S'abonner"
+    },
+    "copyright": "© {year} Syria. Fait avec amour. Tous droits réservés."
+  },"login": {
+    "title": "Se connecter",
+    "emailPlaceholder": "Adresse e-mail",
+    "passwordPlaceholder": "Mot de passe",
+    "loginButton": "Se connecter",
+    "forgotPasswordOtp": "Mot de passe oublié avec OTP ?",
+    "forgotPasswordLink": "Mot de passe oublié avec lien ?",
+    "verifyTitle": "Vérifiez votre compte",
+    "verifyDescription": "Entrez le code à 6 chiffres envoyé à {email}",
+    "otpPlaceholder": "· · · · · ·",
+    "verifyButton": "Vérifier et se connecter",
+    "resendCode": "Renvoyer le code",
+    "noAccount": "Pas de compte ?",
+    "createAccount": "En créer un"
+  },
+   "signup": {
+    "title": "Créer un compte",
+    "firstNamePlaceholder": "Prénom",
+    "lastNamePlaceholder": "Nom de famille",
+    "emailPlaceholder": "Adresse e-mail",
+    "passwordPlaceholder": "Mot de passe",
+    "customerRole": "Client",
+    "supplierRole": "Fournisseur",
+    "signUpButton": "S'inscrire",
+    "verifyTitle": "Vérifiez votre e-mail",
+    "verifyDescription": "Entrez le code à six chiffres envoyé à {email}",
+    "otpPlaceholder": "·  ·  ·  ·  ·  ·",
+    "verifyButton": "Vérifier et se connecter",
+    "resendCode": "Renvoyer le code",
+    "alreadyRegistered": "Déjà inscrit ?",
+    "signIn": "Se connecter"
+  },
+  "forgotPassword": {
+    "title": "Mot de passe oublié",
+    "description": "Entrez l'e-mail de votre compte et nous vous enverrons un lien de réinitialisation.",
+    "emailPlaceholder": "votre@email.com",
+    "sendButton": "Envoyer le lien de réinitialisation",
+    "successMessage": "Si un compte existe pour {email}, un lien de réinitialisation est en route.",
+    "backButton": "Retour à la connexion",
+    "navLink": "Vous vous en souvenez ?",
+    "navLinkAction": "Aller à la connexion"
+  },
+  "resetPassword": {
+    "title": "Définir un nouveau mot de passe",
+    "newPasswordPlaceholder": "Nouveau mot de passe",
+    "confirmPasswordPlaceholder": "Confirmer le mot de passe",
+    "saveButton": "Enregistrer le mot de passe",
+    "successTitle": "Mot de passe mis à jour !",
+    "successButton": "Aller à la connexion",
+    "passwordMismatch": "Les mots de passe ne correspondent pas"
+  },
+  "forgotPasswordOtp": {
+    "title": "Réinitialisation du mot de passe (OTP)",
+    "description": "Entrez l'e-mail de votre compte. Nous vous enverrons un code à six chiffres.",
+    "emailPlaceholder": "vous@exemple.com",
+    "sendButton": "Envoyer l'OTP",
+    "navLink": "Vous vous en souvenez ?",
+    "navLinkAction": "Aller à la connexion"
+  },
+  "forgotPasswordOtpVerify": {
+    "title": "Vérifier le code et définir un nouveau mot de passe",
+    "description": "Entrez le code à 6 chiffres envoyé à {email}",
+    "otpPlaceholder": "· · · · · ·",
+    "newPasswordPlaceholder": "Nouveau mot de passe",
+    "confirmPasswordPlaceholder": "Confirmer le mot de passe",
+    "saveButton": "Enregistrer le mot de passe",
+    "resendCode": "Renvoyer le code",
+    "successTitle": "Mot de passe mis à jour !",
+    "successButton": "Aller à la connexion",
+    "passwordMismatch": "Les mots de passe ne correspondent pas"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue sur votre tableau de bord !"
+  }
+}

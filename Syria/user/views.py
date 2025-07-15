@@ -196,7 +196,7 @@ class loginView(APIView):
         if data.get('requires_verification'):
             send_activation_email(data['email'])
             return Response({'success': False, 'requires_verification': True,
-                             'message': data['message'], 'email': data['email']},
+                            'message': data['message'], 'email': data['email']},
                             status=status.HTTP_200_OK)
 
         # login success → set cookies
@@ -209,7 +209,7 @@ class loginView(APIView):
         resp.set_cookie(
             key     = 'access_token',
             value   = str(access),
-            max_age = 60 * 5,  # 5 minutes
+            max_age =  5,  # 5 minutes
             httponly= True,
             secure  = True,  # Set to True if using HTTPSs
             samesite= 'None',  # Adjust based on your needs
@@ -231,8 +231,8 @@ class VerifyTokenView(APIView):
 
         if not auth_header:
             return Response(
-                {"error": "Authorization header is required"},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"valid": False, "error": "Access token is missing"},
+                status=status.HTTP_200_OK,
             )
 
         if not auth_header.startswith("Bearer "):
@@ -256,7 +256,7 @@ class VerifyTokenView(APIView):
                 {
                     "valid": True,
                     "message": "Token is valid",
-                    "user": {
+                    "data": {
                         "id": user.id,
                         "email": user.email,
                         "first_name": user.first_name,
@@ -271,7 +271,7 @@ class VerifyTokenView(APIView):
         except (InvalidToken, TokenError):
             return Response(
                 {"valid": False, "error": "Invalid or expired token"},
-                status=status.HTTP_401_UNAUTHORIZED,
+                status=status.HTTP_200_OK,
             )
         except CustomUser.DoesNotExist:
             return Response(
@@ -287,7 +287,8 @@ class VerifyTokenView(APIView):
 
 class CookieTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
-        refresh_token = request.COOKIES.get("refresh")
+        refresh_token = request.COOKIES.get("refresh_token")
+        print("Refresh token from cookies:", refresh_token)  # Debugging line
 
         if not refresh_token:
             raise AuthenticationFailed("No refresh token provided")
@@ -296,25 +297,27 @@ class CookieTokenRefreshView(TokenRefreshView):
         try:
             serializer.is_valid(raise_exception=True)
         except Exception:
+            print("Invalid refresh token")  # Debugging line
             raise AuthenticationFailed("Invalid refresh token")
 
         access = serializer.validated_data.get("access")
         refresh = serializer.validated_data.get("refresh")
+        print("Access token after refresh:", access)
 
         response = Response({"detail": "Tokens refreshed"}, status=status.HTTP_200_OK)
 
         response.set_cookie(
-            key="access",
+            key="access_token",
             value=access,
             httponly=True,
             secure=True,
             samesite="None",
-            max_age=60 * 5,
+            max_age=600 * 5,
         )
 
         if refresh:
             response.set_cookie(
-                key="refresh",
+                key="refresh_token",
                 value=refresh,
                 httponly=True,
                 secure=True,
@@ -328,8 +331,9 @@ class CookieTokenRefreshView(TokenRefreshView):
 class logoutView(APIView):
     def post(self, req, *args, **kwargs):
         res = Response({"message": "Login successful"}, status=status.HTTP_200_OK)
-        res.delete_cookie("access", samesite="None")
-        res.delete_cookie("refresh", samesite="None")
+        print(req.COOKIES.get("access_token"))
+        res.delete_cookie("access_token", samesite="None")
+        res.delete_cookie("refresh_token", samesite="None")
         return res
 
 
